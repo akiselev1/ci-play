@@ -279,5 +279,3 @@ def pytest_generate_tests(metafunc) -> None:
 @pytest.fixture(scope="session")
 def skipclean(request):
     return request.config.option.skipclean
-
-
