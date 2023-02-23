@@ -94,7 +94,6 @@ def dut_setup(dut, settings, testdata, request) -> Bond:
     )
     dut.log_str(container_cmd)
     testpmd_tmux_session = testdata.tmux_session_name
-    
     assert start_tmux(dut, testpmd_tmux_session, container_cmd)
     assert wait_tmux_testpmd_ready(dut, testpmd_tmux_session, 10)
     yield Bond(mode, bond_mac)
