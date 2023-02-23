@@ -183,7 +183,7 @@ def parse_file_for_field(file_path, field) -> str:
     for line in lines:
         field_index = line.find(field)
         if field_index != -1:
-            field_str = (line[field_index + len(field) :]).strip()
+            field_str = (line[field_index + len(field):]).strip()
         if field_str:
             break
     return field_str

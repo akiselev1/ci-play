@@ -35,10 +35,10 @@ def dut_setup(dut, settings, testdata, request) -> Bond:
 
     mode = request.param["mode"]
     explicit_mac = request.param["mac"]
-    #if mode == 1 and explicit_mac:
-        #pytest.xfail(
-        #    "Expected failure - mode 1 with explicit bond mac. That should work."
-        #)
+    if mode == 1 and explicit_mac:
+        pytest.xfail(
+            "Expected failure - mode 1 with explicit bond mac. That should work."
+        )
     pf1 = settings.config["dut"]["interface"]["pf1"]["name"]
     assert create_vfs(dut, pf1, 2)
     pf2 = settings.config["dut"]["interface"]["pf2"]["name"]
@@ -94,6 +94,7 @@ def dut_setup(dut, settings, testdata, request) -> Bond:
     )
     dut.log_str(container_cmd)
     testpmd_tmux_session = testdata.tmux_session_name
+    
     assert start_tmux(dut, testpmd_tmux_session, container_cmd)
     assert wait_tmux_testpmd_ready(dut, testpmd_tmux_session, 10)
     yield Bond(mode, bond_mac)
