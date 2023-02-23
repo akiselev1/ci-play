@@ -100,6 +100,7 @@ def dut_setup(dut, settings, testdata, request) -> Bond:
     stop_testpmd_in_tmux(dut, testpmd_tmux_session)
 
 
+
 @pytest.fixture
 def trafficgen_setup(dut, trafficgen, settings, testdata):
     """trafficgen setup and teardown fixture
