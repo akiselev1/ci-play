@@ -49,7 +49,7 @@ def validate_bond(
     assert code == 0, err
 
     if bond_mode == 1:
-        # shut down the VF only if this is bond mode 1
+        # shut down the VF only if there is bond mode 1
         link_down_cmd = f"ip link set {pf1} vf 0 state disable"
         execute_and_assert(dut, [link_down_cmd], 0)
 
