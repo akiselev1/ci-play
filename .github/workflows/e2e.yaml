@@ -19,6 +19,7 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f sriov/requirements.txt ]; then pip install -r sriov/requirements.txt; fi
           pip install mock
+          pip install pytest-github-report
       - name: e2e test
         working-directory: ${{ github.workspace }}
         run: |
@@ -41,7 +42,7 @@ jobs:
           cd sriov/tests
           cp /config/*.yaml ./
           if [[ "${mode}" == "full" ]]; then
-            pytest -v --html=report.html --self-contained-html SR_IOV_* common
+            pytest -v --github-report common
           elif [[ ${#tests[@]} -ne 0 ]]; then
             test_string="pytest -v --html=report.html --self-contained-html"
             for testname in $(echo "${tests[@]}" | tr ' ' '\n' | sort -u); do
@@ -52,10 +53,6 @@ jobs:
           else
             echo "no common code or test case code change - no e2e run"
           fi
-      - name: Display HTML report
-        uses: pavi2410/html-preview-action@v2
-        with:
-          html_file: sriov/tests/report.html
       - run: echo "This job's status is ${{ job.status }}."
   remove-label:
     needs: e2e-tests
