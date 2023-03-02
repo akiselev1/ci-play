@@ -19,6 +19,7 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f sriov/requirements.txt ]; then pip install -r sriov/requirements.txt; fi
           pip install mock
+          pip install pytest-github-report
       - name: e2e test
         working-directory: ${{ github.workspace }}
         run: |
