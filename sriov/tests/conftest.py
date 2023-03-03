@@ -29,7 +29,14 @@ def get_ssh_obj(name: str) -> ShellHandler:
         password = settings.config[name]["password"]
     else:
         password = None
-    return ShellHandler(host, user, password, name)
+    retObj = None
+    try:
+        retObj = ShellHandler(host, user, password, name)
+    except Exception:
+        # error caught and printed in ShellHandler
+        pass
+
+    return retObj
 
 
 def get_testdata_obj(settings: Config) -> ConfigTestData:
@@ -44,6 +51,7 @@ def settings() -> Config:
 @pytest.fixture
 def dut() -> ShellHandler:
     dut_obj = get_ssh_obj("dut")
+    assert (dut_obj)
     assert set_pipefail(dut_obj)
     return dut_obj
 
@@ -70,6 +78,8 @@ def reset_command(dut: ShellHandler, testdata) -> None:
 @pytest.fixture
 def trafficgen() -> ShellHandler:
     trafficgen_obj = get_ssh_obj("trafficgen")
+    assert (trafficgen_obj)
+
     assert set_pipefail(trafficgen_obj)
     return trafficgen_obj
 
@@ -119,6 +129,7 @@ def _cleanup(
 def pytest_configure(config: Config) -> None:
     ShellHandler.debug_cmd_execute = config.getoption("--debug-execute")
     dut = get_ssh_obj("dut")
+    assert (dut)
     # Need to clear the terminal before the first command, there may be some
     # residual text from ssh
     cmd_clear = "clear"

@@ -36,6 +36,12 @@ To install,
 yum install -y tmux nmap podman
 ```
 
+One special test case, SR_IOV_OVS_IPv6, requires Open vSwitch. Without Open vSwitch installed, this test case will be skipped. To install an up to date Open vSwitch, install from the source tree is recommended. Alternatively, an out of date Open vSwitch version can be installed on RHEL just for the testing purpose,
+```
+yum install -y https://rdoproject.org/repos/rdo-release.rpm
+yum install -y openvswitch
+```
+
 On the traffic generator server, the following RPM packages are required,
 * nmap
 
@@ -97,6 +103,9 @@ randomly_terminate_test_length:   # amount of time, in minutes, to run test_SR_I
                                   # example: 10.5
 container_manager:                # the container manager command to use (podman or docker)
                                   # example: podman
+vlan:                             # vlan tag used by the vlan tests, default is 10
+mtu:                              # MTU size; if unspecified, the script will derive it
+bonding_switch_delay              # Expected bonding switch over/back delay in second, default is 1
 ```
 
 Running the script from a python3 virtual environment is recommended. Install the required python modules,
@@ -174,3 +183,4 @@ After the debug is complete, one has to manually clean up the setup.
 
 The following test options are uncommon and meant to use under rare situations:
 + `--debug-execute`: debug command execution over the ssh session
+

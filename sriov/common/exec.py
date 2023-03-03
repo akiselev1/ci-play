@@ -21,10 +21,16 @@ class ShellHandler:
         self.name = name
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        if psw is None:
-            self.ssh.connect(host, username=user, port=22)
-        else:
-            self.ssh.connect(host, username=user, password=psw, port=22)
+        try:
+            if psw is None:
+                self.ssh.connect(host, username=user, port=22)
+            else:
+                self.ssh.connect(host, username=user, password=psw, port=22)
+
+        except paramiko.AuthenticationException:
+            print("ERROR: invalid credentials provided for {}".format(host))
+            raise
+
         channel = self.ssh.invoke_shell(width=300)
         self.stdin = channel.makefile("wb")
         self.stdout = channel.makefile("r")
@@ -192,7 +198,8 @@ class ShellHandler:
 
         return exit_code
 
-    def execute(self, cmd: str, timeout: int = 5) -> Tuple[int, list, list]:
+    def execute(self, cmd: str, timeout: int = 5) \
+            -> Tuple[int, list, list]:  # noqa: C901
         """Execute a command in the SSH session
 
         Args:

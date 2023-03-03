@@ -988,3 +988,35 @@ def delete_ipv6_neighbor(ssh_obj: ShellHandler, ipv6: str):
         return
     cmd = [f"ip -6 neigh del {ipv6} dev {intf}"]
     execute_and_assert(ssh_obj, cmd, 0)
+
+
+def switch_detected(ssh_obj: ShellHandler, interface: str) -> bool:
+    """Test if the specified interface is connected to a switch
+
+    Args:
+        ssh_obj (ShellHandler): ssh connection obj
+        interface (str): interface name
+
+    Returns:
+        bool: True is a switch is detected
+    """
+    cmd = f"timeout 3 tcpdump -i {interface} -c 1 stp"
+    ssh_obj.log_str(cmd)
+    code, _, _ = ssh_obj.execute(cmd)
+    return code == 0
+
+
+def is_package_installed(ssh_obj: ShellHandler, package_name) -> bool:
+    """Test if the specified RPM package is installed
+
+    Args:
+        ssh_obj (ShellHandler): ssh connection obj
+        package_name (str): RPM package name
+
+    Returns:
+        bool: True if the package is installed
+    """
+    cmd = f"rpm -q {package_name}"
+    ssh_obj.log_str(cmd)
+    code, _, _ = ssh_obj.execute(cmd)
+    return code == 0
